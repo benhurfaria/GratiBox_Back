@@ -20,12 +20,12 @@ async function signIn(req, res) {
         `,
       [email]
     );
-
+    
     if (user.rowCount === 0) {
       res.sendStatus(401);
       return;
     }
-    console.log("EAI");
+    console.log('EAI');
     const encryptedPassword = user.rows[0].password;
 
     if (!bcrypt.compareSync(password, encryptedPassword)) {
@@ -34,19 +34,48 @@ async function signIn(req, res) {
     }
 
     const token = uuid();
-    console.log(token);
+    const name = user.rows[0].name;
+    const id = user.rows[0].id;
+    console.log(name);
+    console.log(id);
     await connection.query(
       `
-            INSERT INTO sessions (userid, token) VALUES ($1, $2);
+            INSERT INTO sessions ("idUser", token) VALUES ($1, $2);
         `,
-      [user.rows[0].id, token]
+      [id, token]
     );
-
+    console.log('EAI2');
+    const promise = await connection.query(
+      `
+      SELECT "userServices"."signDate", services.name AS nameplan FROM "userServices" JOIN services ON "userServices"."idServices" = services.id WHERE "userServices"."idUser" = $1;
+    `,
+      [id]
+    );
+    if (promise.rowCount === 0) {
+      res.status(200).send({
+        id,
+        token,
+        name,
+        services: null,
+      });
+      return;
+    }
+    /*const other = await connection.query(`
+    SELECT products.name AS "productName" FROM "userServices" JOIN "userServicesProducts" ON "userServices".id = "userServicesProducts"."idUserProducts" JOIN products ON "userServicesProducts"."idProducts" = products.id WHERE "userServices"."idUser" = $1;
+    `, [id]);
+    const adress = await connection.query(`
+    SELECT * FROM adress WHERE "idUser" = $1;
+    `, [id]);*/
     res.status(200).send({
+      id,
       token,
+      name,
+      services: promise.rows[0],
+      /*products: other.rows,
+      endereco: adress.rows[0],*/
     });
   } catch (error) {
-    res.status(500).send({message: "falhou"});
+    res.status(500).send({ message: 'falhou' });
   }
 }
 
