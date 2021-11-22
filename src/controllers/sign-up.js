@@ -4,7 +4,6 @@ import { signUpSchema } from '../schemas/userSchema.js';
 
 async function signUp(req, res) {
   const validation = signUpSchema.validate(req.body);
-  console.log("OI");
   if (validation.error) {
     res.sendStatus(400);
     return;
