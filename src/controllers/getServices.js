@@ -2,7 +2,7 @@ import { connection } from '../database.js';
 
 async function getService(req, res){
     const { id } = req.body;
-    console.log(id);
+
     try {
         const services = await connection.query(
             `
@@ -23,7 +23,6 @@ async function getService(req, res){
             deliveryDate: delivery.rows[0].deliveryDate,
         });
     } catch (err) {
-        console.log(err);
         res.sendStatus(500);
     }
 }

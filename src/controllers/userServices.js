@@ -6,20 +6,16 @@ async function userService(req, res) {
   const produtos = produto.split(' ');
   const idServices = plano === 'semanal' ? 1 : 2;
   try {
-    console.log(id);
-    console.log(idServices);
     await connection.query(
       `
         INSERT INTO "userServices" ("idUser", "idServices", "signDate") VALUES ($1, $2, NOW());
       `,
       [id, idServices]
     );
-    console.log("EAI");
     const promise = await connection.query(`
         SELECT * FROM "userServices" ORDER BY id;
       `);
     const idUserProducts = promise.rows[promise.rowCount - 1].id;
-    console.log(idUserProducts);
     produtos.forEach(async (prod) => {
       if (prod === 'cha') {
         await connection.query(
@@ -54,7 +50,6 @@ async function userService(req, res) {
     );
     res.sendStatus(200);
   } catch (err) {
-      console.log(err);
       res.sendStatus(500);
   }
 }

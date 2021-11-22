@@ -25,7 +25,7 @@ async function signIn(req, res) {
       res.sendStatus(401);
       return;
     }
-    console.log('EAI');
+   
     const encryptedPassword = user.rows[0].password;
 
     if (!bcrypt.compareSync(password, encryptedPassword)) {
@@ -36,15 +36,12 @@ async function signIn(req, res) {
     const token = uuid();
     const name = user.rows[0].name;
     const id = user.rows[0].id;
-    console.log(name);
-    console.log(id);
     await connection.query(
       `
             INSERT INTO sessions ("idUser", token) VALUES ($1, $2);
         `,
       [id, token]
     );
-    console.log('EAI2');
     const promise = await connection.query(
       `
       SELECT "userServices"."signDate", services.name AS nameplan FROM "userServices" JOIN services ON "userServices"."idServices" = services.id WHERE "userServices"."idUser" = $1;
