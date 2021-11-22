@@ -60,19 +60,19 @@ async function signIn(req, res) {
       });
       return;
     }
-    const other = await connection.query(`
+    /*const other = await connection.query(`
     SELECT products.name AS "productName" FROM "userServices" JOIN "userServicesProducts" ON "userServices".id = "userServicesProducts"."idUserProducts" JOIN products ON "userServicesProducts"."idProducts" = products.id WHERE "userServices"."idUser" = $1;
     `, [id]);
     const adress = await connection.query(`
     SELECT * FROM adress WHERE "idUser" = $1;
-    `, [id]);
+    `, [id]);*/
     res.status(200).send({
       id,
       token,
       name,
       services: promise.rows[0],
-      products: other.rows,
-      endereco: adress.rows[0],
+      /*products: other.rows,
+      endereco: adress.rows[0],*/
     });
   } catch (error) {
     res.status(500).send({ message: 'falhou' });
