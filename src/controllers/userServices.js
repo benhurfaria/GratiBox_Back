@@ -50,7 +50,8 @@ async function userService(req, res) {
     );
     res.sendStatus(200);
   } catch (err) {
-      res.sendStatus(500);
+    console.log(err);
+    res.Status(500).send(err);
   }
 }
 
