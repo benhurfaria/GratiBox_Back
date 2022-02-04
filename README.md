@@ -9,3 +9,4 @@ DB_USER=postgres
 DB_PASSWORD=123456
 DB_HOST=localhost
 PORT=4000
+deploy: https://back-projeto-gratibox.herokuapp.com/
